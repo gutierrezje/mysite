@@ -1,11 +1,8 @@
 "use client"
 
 import { NeonSun } from "@/components/shared/neon-sun"
-import { SkillBadge } from "@/components/shared/skill-badge"
-import { WireframeSkull } from "@/components/shared/wireframe-skull"
+import { SkullR3F } from "@/components/shared/skull-r3f"
 import { Button } from "@/components/ui/button"
-import { useTheme } from "@/hooks/use-theme"
-import { SKILLS } from "@/lib/constants"
 
 export function Hero() {
 	return <HeroPhantom />
@@ -14,22 +11,22 @@ export function Hero() {
 function HeroPhantom() {
 	return (
 		<section className="relative flex min-h-screen flex-col items-center justify-end overflow-hidden pb-16 md:pb-24">
-			{/* ── Layer 0: Starfield ── */}
-			<div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-				<PhantomStarfield />
-			</div>
-
-			{/* ── Layer 1: Banded sun — behind skull, at horizon ── */}
-			<div className="pointer-events-none absolute left-1/2 top-[11%] z-[1] w-[500px] -translate-x-1/2 md:top-[7%] md:w-[700px] lg:w-[800px]">
+			{/* ── Layer 0: Banded sun — anchored to horizon ── */}
+			<div className="pointer-events-none absolute bottom-[48%] left-1/2 z-[0] w-[500px] -translate-x-1/2 md:bottom-[52%] md:w-[700px] lg:w-[800px]">
 				<NeonSun />
 			</div>
 
-			{/* ── Layer 2: Wireframe skull ── */}
+			{/* ── Layer 1: Mountain silhouettes ── */}
+			<div className="pointer-events-none absolute inset-x-0 top-[28%] z-[1] h-[24%] md:top-[24%] md:h-[24%]">
+				<PhantomMountains />
+			</div>
+
+			{/* ── Layer 2: 3D canvas (skull + starfield) — in front of mountains, behind text ── */}
 			<div
-				className="pointer-events-none absolute left-1/2 top-[5%] z-[2] w-[260px] -translate-x-1/2 md:top-[2%] md:w-[360px] lg:w-[420px]"
+				className="absolute inset-0 z-[2]"
 				style={{ animation: "phantom-flicker 4s ease-in-out infinite" }}
 			>
-				<WireframeSkull />
+				<SkullR3F className="size-full" />
 			</div>
 
 			{/* ── Layer 3: Horizon line ── */}
@@ -37,8 +34,8 @@ function HeroPhantom() {
 				className="pointer-events-none absolute left-0 right-0 top-[52%] z-[3] h-px md:top-[48%]"
 				style={{
 					background:
-						"linear-gradient(90deg, transparent, var(--neon) 15%, var(--neon) 85%, transparent)",
-					boxShadow: "0 0 20px 4px var(--neon-glow), 0 0 60px 10px var(--neon-dim)",
+						"linear-gradient(90deg, transparent, var(--foreground) 15%, var(--foreground) 85%, transparent)",
+					opacity: 0,
 				}}
 			/>
 
@@ -95,7 +92,6 @@ function HeroPhantom() {
 						color: "var(--neon)",
 						textShadow:
 							"0 0 10px var(--neon-glow), 0 0 40px var(--neon-dim), 0 0 80px var(--neon-dim)",
-						animation: "phantom-pulse 3s ease-in-out infinite",
 					}}
 				>
 					Jesus
@@ -132,50 +128,83 @@ function HeroPhantom() {
 	)
 }
 
-/** Scattered dots simulating a starfield behind the composition */
-function PhantomStarfield() {
-	// Deterministic pseudo-random spread to avoid visible linear bands.
-	const hash = (seed: number) => {
-		const v = Math.sin(seed * 127.1 + 311.7) * 43758.5453123
-		return v - Math.floor(v)
-	}
 
-	const stars = Array.from({ length: 68 }, (_, i) => {
-		const id = i + 1
-		const x = hash(id * 1.73)
-		const y = hash(id * 9.13)
-		const sizeNoise = hash(id * 21.37)
-		const alphaNoise = hash(id * 41.93)
-		const delayNoise = hash(id * 77.29)
-
-		return {
-			x: (x * 100).toFixed(1),
-			// Keep stars above horizon (horizon is at ~48-52% depending on viewport)
-			y: (2 + y ** 1.35 * 42).toFixed(1),
-			size: sizeNoise > 0.88 ? 3 : sizeNoise > 0.55 ? 2 : 1,
-			opacity: 0.12 + alphaNoise * 0.45,
-			delay: delayNoise * 4,
-		}
-	})
-
+function PhantomMountains() {
 	return (
-		<>
-			{stars.map((s, i) => (
-				<div
-					key={`star-${i}-${s.x}-${s.y}`}
-					className="absolute rounded-full"
-					style={{
-						left: `${s.x}%`,
-						top: `${s.y}%`,
-						width: s.size,
-						height: s.size,
-						background: "var(--neon)",
-						opacity: s.opacity,
-						animation: `phantom-pulse ${2 + s.delay}s ease-in-out infinite`,
-						animationDelay: `${s.delay}s`,
-					}}
-				/>
-			))}
-		</>
+		<svg
+			viewBox="0 0 1200 500"
+			preserveAspectRatio="none"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			className="size-full"
+			aria-hidden="true"
+		>
+			<defs>
+				{/* Glow filter for back-lit mountains */}
+				<filter id="mountain-glow" x="-20%" y="-20%" width="140%" height="140%">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+					<feMerge>
+						<feMergeNode in="blur" />
+						<feMergeNode in="blur" />
+					</feMerge>
+				</filter>
+			</defs>
+
+			{/* ── Left range — with back-lit glow ── */}
+			<path
+				d="M0 280 L40 260 L80 220 L110 190 L140 160 L170 180 L200 150 L230 170 L260 200 L300 240 L340 280 L400 340 L480 420 L540 500"
+				stroke="var(--neon)"
+				strokeWidth="3"
+				opacity="0.3"
+				fill="none"
+				filter="url(#mountain-glow)"
+			/>
+			<path
+				d="M0 500 L0 280 L40 260 L80 220 L110 190 L140 160 L170 180 L200 150 L230 170 L260 200 L300 240 L340 280 L400 340 L480 420 L540 500 Z"
+				fill="var(--background)"
+			/>
+
+			{/* ── Middle-left range — with back-lit glow ── */}
+			<path
+				d="M340 500 L370 400 L400 340 L430 280 L460 300 L490 260 L510 290 L530 320 L560 370 L600 430 L640 500"
+				stroke="var(--neon)"
+				strokeWidth="3"
+				opacity="0.3"
+				fill="none"
+				filter="url(#mountain-glow)"
+			/>
+			<path
+				d="M340 500 L370 400 L400 340 L430 280 L460 300 L490 260 L510 290 L530 320 L560 370 L600 430 L640 500 Z"
+				fill="var(--background)"
+			/>
+
+			{/* ── Middle-right range — with back-lit glow ── */}
+			<path
+				d="M560 500 L600 430 L640 370 L670 320 L690 290 L710 260 L740 300 L770 280 L800 340 L830 400 L860 500"
+				stroke="var(--neon)"
+				strokeWidth="3"
+				opacity="0.3"
+				fill="none"
+				filter="url(#mountain-glow)"
+			/>
+			<path
+				d="M560 500 L600 430 L640 370 L670 320 L690 290 L710 260 L740 300 L770 280 L800 340 L830 400 L860 500 Z"
+				fill="var(--background)"
+			/>
+
+			{/* ── Right range — with back-lit glow ── */}
+			<path
+				d="M660 500 L720 420 L800 340 L860 280 L900 240 L940 200 L970 170 L1000 150 L1030 180 L1060 160 L1090 190 L1120 220 L1160 260 L1200 280"
+				stroke="var(--neon)"
+				strokeWidth="3"
+				opacity="0.3"
+				fill="none"
+				filter="url(#mountain-glow)"
+			/>
+			<path
+				d="M660 500 L720 420 L800 340 L860 280 L900 240 L940 200 L970 170 L1000 150 L1030 180 L1060 160 L1090 190 L1120 220 L1160 260 L1200 280 L1200 500 Z"
+				fill="var(--background)"
+			/>
+		</svg>
 	)
 }
