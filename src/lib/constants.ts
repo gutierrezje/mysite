@@ -4,59 +4,36 @@ export type Project = {
 	tags: string[]
 	href: string
 	featured?: boolean
+	inProgress?: boolean
 }
 
 export type Social = {
 	label: string
 	href: string
-	icon: "github" | "linkedin" | "twitter"
+	icon: "github" | "linkedin"
 }
 
-export const PROJECTS: Project[] = [
-	{
-		title: "3D Terrain Generator",
-		description:
-			"Real-time procedural terrain generation using WebGL shaders and Perlin noise. Interactive camera controls and dynamic LOD system.",
-		tags: ["Three.js", "WebGL", "TypeScript"],
-		href: "#",
-		featured: true,
-	},
-	{
-		title: "LeetCode Tracker",
-		description:
-			"Personal dashboard for tracking LeetCode progress with heatmap visualization and spaced-repetition review scheduling.",
-		tags: ["Next.js", "PostgreSQL", "Chart.js"],
-		href: "#",
-		featured: true,
-	},
-	{
-		title: "DevLog CLI",
-		description:
-			"Command-line tool for maintaining a developer journal. Markdown-based with Git integration and automatic tagging.",
-		tags: ["Rust", "CLI", "Markdown"],
-		href: "#",
-	},
-	{
-		title: "Neural Style Transfer",
-		description:
-			"Web app that applies artistic neural style transfer to uploaded images using a pre-trained TensorFlow model.",
-		tags: ["Python", "TensorFlow", "React"],
-		href: "#",
-	},
-	{
-		title: "Distributed KV Store",
-		description:
-			"Fault-tolerant distributed key-value store implementing Raft consensus. Benchmarked at 50k ops/sec.",
-		tags: ["Go", "gRPC", "Raft"],
-		href: "#",
-		featured: true,
-	},
+export const EXCLUDED_REPOS: string[] = []
+
+export type CuratedOverride = Partial<Project> & { repoName: string }
+
+export const CURATED_OVERRIDES: CuratedOverride[] = [
+	// Example:
+	// {
+	//   repoName: "my-repo",
+	//   description: "Custom description override",
+	//   featured: true,
+	//   inProgress: true,
+	// },
+]
+
+export const EXTRA_PROJECTS: Project[] = [
 	{
 		title: "Portfolio Site",
 		description:
 			"This site — built with Next.js 15, Tailwind v4, and three switchable design themes. You're looking at it.",
 		tags: ["Next.js", "Tailwind", "TypeScript"],
-		href: "#",
+		href: "https://github.com/gutierrezje/mysite",
 	},
 ]
 
@@ -80,7 +57,9 @@ export const SKILLS: string[] = [
 ]
 
 export const SOCIALS: Social[] = [
-	{ label: "GitHub", href: "https://github.com/jesus", icon: "github" },
-	{ label: "LinkedIn", href: "https://linkedin.com/in/jesus", icon: "linkedin" },
-	{ label: "Twitter", href: "https://twitter.com/jesus", icon: "twitter" },
+	{ label: "GitHub", href: "https://github.com/gutierrezje", icon: "github" },
+	{ label: "LinkedIn", href: "https://linkedin.com/in/gutierrezje", icon: "linkedin" },
 ]
+
+export const GITHUB_USERNAME = "gutierrezje"
+export const LEETCODE_USERNAME = "gutierrezje" // set to "" to disable
