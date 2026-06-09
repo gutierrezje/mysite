@@ -13,7 +13,7 @@ export type Social = {
 	icon: "github" | "linkedin"
 }
 
-export const EXCLUDED_REPOS: string[] = []
+export const EXCLUDED_REPOS: string[] = ["mysite"]
 
 export type CuratedOverride = Partial<Project> & { repoName: string }
 
@@ -27,15 +27,7 @@ export const CURATED_OVERRIDES: CuratedOverride[] = [
 	// },
 ]
 
-export const EXTRA_PROJECTS: Project[] = [
-	{
-		title: "Portfolio Site",
-		description:
-			"This site — built with Next.js 15, Tailwind v4, and three switchable design themes. You're looking at it.",
-		tags: ["Next.js", "Tailwind", "TypeScript"],
-		href: "https://github.com/gutierrezje/mysite",
-	},
-]
+export const EXTRA_PROJECTS: Project[] = []
 
 export const SKILLS: string[] = [
 	"TypeScript",
