@@ -111,6 +111,38 @@ export function PlexusBackground() {
 			return det <= 0
 		}
 
+		const getTriangleLight = (a: GridParticle, b: GridParticle, c: GridParticle) => {
+			const edgeAX = b.screenX - a.screenX
+			const edgeAY = b.screenY - a.screenY
+			const edgeBX = c.screenX - a.screenX
+			const edgeBY = c.screenY - a.screenY
+			const slope = (edgeAY - edgeBY) / Math.max(spacingY, 1)
+			const horizontalTilt = (edgeAX + edgeBX) / Math.max(spacingX * 2, 1)
+			return Math.max(0, Math.min(1, 0.42 + slope * 0.32 - horizontalTilt * 0.12))
+		}
+
+		const drawTriangle = (
+			a: GridParticle,
+			b: GridParticle,
+			c: GridParticle,
+			alphaMultiplier: number,
+			baseAlpha: number,
+		) => {
+			if (isBackfacing(a, b, c)) return
+
+			const light = getTriangleLight(a, b, c)
+			const shade = Math.round(58 + light * 42)
+
+			ctx.beginPath()
+			ctx.moveTo(a.screenX, a.screenY)
+			ctx.lineTo(b.screenX, b.screenY)
+			ctx.lineTo(c.screenX, c.screenY)
+			ctx.closePath()
+			ctx.fillStyle = `rgba(${shade - 8}, ${shade}, ${shade + 14}, ${(baseAlpha + light * 0.025) * alphaMultiplier})`
+			ctx.fill()
+			ctx.stroke()
+		}
+
 		// Animation Loop
 		const draw = (timestamp: number, force = false) => {
 			if (!force && timestamp - lastFrameTime < frameInterval) {
@@ -160,7 +192,7 @@ export function PlexusBackground() {
 			for (let r = 0; r < rows - 1; r++) {
 				const avgScale = (grid[r][0].scale + grid[r + 1][0].scale) / 2
 				const alphaMultiplier = Math.min(1.2, avgScale * 0.85)
-				ctx.strokeStyle = `rgba(80, 95, 115, ${0.22 * alphaMultiplier})`
+				ctx.strokeStyle = `rgba(80, 95, 115, ${0.2 * alphaMultiplier})`
 				ctx.lineWidth = 0.42 * alphaMultiplier
 
 				for (let c = 0; c < cols - 1; c++) {
@@ -200,29 +232,8 @@ export function PlexusBackground() {
 						tri2C = pDiag
 					}
 
-					// Draw and Fill Triangle 1 if not back-facing
-					if (!isBackfacing(tri1A, tri1B, tri1C)) {
-						ctx.beginPath()
-						ctx.moveTo(tri1A.screenX, tri1A.screenY)
-						ctx.lineTo(tri1B.screenX, tri1B.screenY)
-						ctx.lineTo(tri1C.screenX, tri1C.screenY)
-						ctx.closePath()
-						ctx.stroke()
-						ctx.fillStyle = `rgba(80, 95, 115, ${0.014 * alphaMultiplier})`
-						ctx.fill()
-					}
-
-					// Draw and Fill Triangle 2 if not back-facing
-					if (!isBackfacing(tri2A, tri2B, tri2C)) {
-						ctx.beginPath()
-						ctx.moveTo(tri2A.screenX, tri2A.screenY)
-						ctx.lineTo(tri2B.screenX, tri2B.screenY)
-						ctx.lineTo(tri2C.screenX, tri2C.screenY)
-						ctx.closePath()
-						ctx.stroke()
-						ctx.fillStyle = `rgba(80, 95, 115, ${0.008 * alphaMultiplier})`
-						ctx.fill()
-					}
+					drawTriangle(tri1A, tri1B, tri1C, alphaMultiplier, 0.012)
+					drawTriangle(tri2A, tri2B, tri2C, alphaMultiplier, 0.007)
 				}
 			}
 

@@ -16,7 +16,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
 
 			{wipProjects.length > 0 && (
 				<div className="mb-10">
-					<h3 className="mb-4 font-mono text-xs font-semibold tracking-widest text-indigo-400/80 uppercase">
+					<h3 className="mb-4 font-mono text-xs font-semibold tracking-widest text-zinc-400 uppercase">
 						Currently Working On
 					</h3>
 					<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

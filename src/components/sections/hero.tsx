@@ -13,13 +13,14 @@ export function Hero() {
 					</span>
 				</h1>
 
-				<p className="mx-auto mt-4 max-w-md font-mono text-sm tracking-[0.25em] text-indigo-400 uppercase">
+				<p className="mx-auto mt-4 max-w-md font-mono text-sm tracking-[0.25em] text-zinc-400 uppercase">
 					Software Engineer
 				</p>
 
 				<p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-zinc-400">
-					Building at the intersection of systems programming, creative design, and the modern web.
-					Focused on creating beautiful, high-performance user experiences and robust architectures.
+					I'm a software engineer with a background in computer science and mathematics. I work
+					across developer tools, backend systems, and web applications. I tinker with AI and GPU programming,
+					with a particular interest in reliability and thoughtful system design.
 				</p>
 
 				<div className="mt-10 flex justify-center gap-4">

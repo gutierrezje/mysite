@@ -33,7 +33,7 @@ export default function RootLayout({
 				className={`${inter.variable} ${spaceMono.variable} bg-slate-50 text-slate-900 antialiased min-h-screen relative overflow-x-hidden`}
 			>
 				<PlexusBackground />
-				<div className="relative z-10 mx-auto min-h-screen max-w-4xl bg-black text-white shadow-[0_0_60px_rgba(0,0,0,0.85)] border-x border-zinc-900/40 flex flex-col">
+				<div className="dark-glass-column relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col text-white">
 					<TooltipProvider>{children}</TooltipProvider>
 				</div>
 			</body>

@@ -66,9 +66,9 @@
 	--popover: oklch(0.1 0.01 240 / 0.95);
 	--popover-foreground: oklch(0.98 0.01 240);
 
-	/* Primary - Aurora Indigo/Violet */
-	--primary: oklch(0.68 0.22 284); /* Vibrant indigo */
-	--primary-foreground: oklch(0.98 0.01 240);
+	/* Primary - Premium White/Gray */
+	--primary: oklch(0.98 0.01 240); /* Crisp white */
+	--primary-foreground: oklch(0.08 0.01 240); /* Deep gray/black */
 
 	/* Secondary */
 	--secondary: oklch(0.16 0.01 240);
@@ -78,9 +78,9 @@
 	--muted: oklch(0.14 0.01 240);
 	--muted-foreground: oklch(0.58 0.01 240);
 
-	/* Accent - Soft Violet glow */
-	--accent: oklch(0.18 0.05 284);
-	--accent-foreground: oklch(0.95 0.01 284);
+	/* Accent - Soft gray highlight */
+	--accent: oklch(0.2 0.01 240);
+	--accent-foreground: oklch(0.98 0.01 240);
 
 	/* Destructive */
 	--destructive: oklch(0.55 0.18 25);
@@ -89,14 +89,14 @@
 	/* Borders and Inputs */
 	--border: oklch(0.24 0.01 240 / 0.45);
 	--input: oklch(0.18 0.01 240);
-	--ring: oklch(0.68 0.22 284);
+	--ring: oklch(0.98 0.01 240);
 
 	/* Surfaces */
 	--surface: oklch(0.08 0.01 240);
 	--surface-foreground: oklch(0.9 0.01 240);
 
 	/* Chart colors */
-	--chart-1: oklch(0.68 0.22 284);
+	--chart-1: oklch(0.8 0.01 240);
 	--chart-2: oklch(0.65 0.18 200);
 	--chart-3: oklch(0.7 0.2 150);
 	--chart-4: oklch(0.8 0.15 80);
@@ -111,6 +111,40 @@
 
 	body {
 		@apply font-sans antialiased;
+	}
+}
+
+@layer utilities {
+	.dark-glass-column {
+		@apply border-x border-white/[0.07] backdrop-blur-[3px];
+		isolation: isolate;
+		background:
+			linear-gradient(145deg, rgb(255 255 255 / 0.025), transparent 28%),
+			rgb(2 3 5 / 0.7);
+		box-shadow:
+			inset 1px 0 rgb(255 255 255 / 0.025),
+			inset -1px 0 rgb(255 255 255 / 0.025),
+			0 0 80px rgb(0 0 0 / 0.8);
+	}
+
+	.dark-glass-column::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		background: linear-gradient(
+			115deg,
+			transparent 20%,
+			rgb(255 255 255 / 0.015) 42%,
+			transparent 58%
+		);
+	}
+
+	@supports not (backdrop-filter: blur(1px)) {
+		.dark-glass-column {
+			background: rgb(3 4 6 / 0.97);
+		}
 	}
 }
 
